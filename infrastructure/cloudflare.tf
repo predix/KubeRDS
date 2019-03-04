@@ -7,8 +7,8 @@ variable "cloudflare_token" {
   # Terraform will prompt for the token
 }
 
-variable "domain" {
-  default = "krds.io"
+variable "domains" {
+  default = [ "krds.io", "kuberds.com", "kuberds.org", "kuberds.net", "kuberds.io" ]
 }
 
 variable "gitlab_pages_ipv4_address" {
@@ -16,15 +16,17 @@ variable "gitlab_pages_ipv4_address" {
 }
 
 resource "cloudflare_record" "root-level" {
-  domain  = "${var.domain}"
-  name    = "${var.domain}"
+  count   = 5 # This shoud match the number of elements in "domanins" variable
+  domain  = "${element(var.domains, count.index)}"
+  name    = "${element(var.domains, count.index)}"
   value   = "${var.gitlab_pages_ipv4_address}"
   type    = "A"
   proxied = true
 }
 
 resource "cloudflare_record" "www" {
-  domain  = "${var.domain}"
+  count   = 5 # This shoud match the number of elements in "domanins" variable
+  domain  = "${element(var.domains, count.index)}"
   name    = "www"
   value   = "${var.gitlab_pages_ipv4_address}"
   type    = "A"
