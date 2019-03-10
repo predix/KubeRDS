@@ -15,6 +15,7 @@ variable "gitlab_pages_ipv4_address" {
   default = "35.185.44.232"
 }
 
+# Create a rool-level A record for each of the domains
 resource "cloudflare_record" "root-level" {
   count   = 5 # This shoud match the number of elements in "domanins" variable
   domain  = "${element(var.domains, count.index)}"
@@ -24,6 +25,7 @@ resource "cloudflare_record" "root-level" {
   proxied = true
 }
 
+# Create an A record for "www" for each of the domains
 resource "cloudflare_record" "www" {
   count   = 5 # This shoud match the number of elements in "domanins" variable
   domain  = "${element(var.domains, count.index)}"
